@@ -1,7 +1,6 @@
-const fs = require('fs');
+import { loadData } from "../helper.js";
 
-const elfCalories = fs.readFileSync('day-01/input.txt', { encoding: 'utf-8' })
-  .split('\n')
+const elfCalories = loadData('01')
   .map(calorie => +calorie);
 
 let maxCalories = 0;
