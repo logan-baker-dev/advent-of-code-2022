@@ -6,7 +6,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const DAY = {
-  one: '01'
+  one: '01',
+  two: '02'
 }
 
 export const loadData = (day) => {
