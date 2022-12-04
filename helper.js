@@ -8,12 +8,13 @@ const __dirname = dirname(__filename);
 const DAY = {
   one: '01',
   two: '02',
-  three: '03'
+  three: '03',
+  four: '04'
 }
 
 export const loadData = (day) => {
   return readFileSync(`${__dirname}/${day}/input.txt`, 'utf-8')
-    .split('\n');
+    .split('\r\n');
 }
 
 export default DAY;
