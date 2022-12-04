@@ -7,7 +7,8 @@ const __dirname = dirname(__filename);
 
 const DAY = {
   one: '01',
-  two: '02'
+  two: '02',
+  three: '03'
 }
 
 export const loadData = (day) => {
