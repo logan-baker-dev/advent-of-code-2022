@@ -18,4 +18,8 @@ export const loadData = (day) => {
     .split('\r\n');
 }
 
+export const loadRawData = (day) => {
+  return readFileSync(`${__dirname}/${day}/input.txt`, 'utf-8');
+}
+
 export default DAY;

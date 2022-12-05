@@ -1,7 +1,12 @@
-import DAY, { loadData } from "../helper.js";
+import DAY, { loadRawData } from "../helper.js";
 
 const buildCrateStacks = (crates) => {
-  const stacks = Array(9).fill()
+  const numberRow = crates[crates.length - 1];
+  const stackSize = +numberRow[numberRow.length - 2];
+
+  crates = crates.slice(0, crates.length - 1); // Get rid of the numberRow before parsing.
+
+  const stacks = Array(stackSize).fill()
     .map(() => new Array());
 
   for (const layer of crates) {
@@ -22,16 +27,24 @@ const buildCrateStacks = (crates) => {
 }
 
 const parseInstruction = (instruction) => {
-  instruction = instruction.replaceAll(/[a-z ]/g, '');
+  instruction = instruction.replaceAll(/move |from | to/g, '');
 
-  return instruction.split('')
+  let [amount, from, to] = instruction.split(' ')
     .map(number => +number);
+
+  return [amount, from - 1, to - 1];
 }
 
 const moveCrates = (crateStacks, from, to, amount) => {
-  for (let i = 0; i < amount; ++i) {
-    const crate = crateStacks[from].pop();
-    crateStacks[to].push(crate);
+
+  try {
+    for (let i = 0; i < amount; ++i) {
+      const crate = crateStacks[from].pop();
+      crateStacks[to].push(crate);
+    }
+  }
+  catch (error) {
+    console.log(error);
   }
 
   return crateStacks;
@@ -63,30 +76,35 @@ const buildMessageFromCrateStacks = (crateStacks) => {
 }
 
 const getTopCrates = (day) => {
-  const procedures = loadData(day);
-  const crates = procedures.slice(0, 8); // First 7 rows of input file. (Use 8 here because end index is exclusive.)
-  const instructions = procedures.slice(10); // Every row in the input file after line 10.
+  const procedures = loadRawData(day);
 
-  let crateStacks = buildCrateStacks(crates);
+  const [crateData, instructions] = procedures
+    .split('\r\n\r\n')
+    .map(str => str.split('\r\n'));
+
+  let crateStacks = buildCrateStacks(crateData);
 
   for (const instruction of instructions) {
     const [amount, from, to] = parseInstruction(instruction);
-    crateStacks = moveCrates(crateStacks, from - 1, to - 1, amount);
+    crateStacks = moveCrates(crateStacks, from, to, amount);
   }
 
   return buildMessageFromCrateStacks(crateStacks);
 }
 
 const getTopCreatesWithNewCrane = (day) => {
-  const procedures = loadData(day);
-  const crates = procedures.slice(0, 8); // First 7 rows of input file. (Use 8 here because end index is exclusive.)
-  const instructions = procedures.slice(10); // Every row in the input file after line 10.
+  const procedures = loadRawData(day);
 
-  let crateStacks = buildCrateStacks(crates);
+  const [crateData, instructions] = procedures
+    .split('\r\n\r\n')
+    .map(str => str.split('\r\n'));
+
+
+  let crateStacks = buildCrateStacks(crateData);
 
   for (const instruction of instructions) {
     const [amount, from, to] = parseInstruction(instruction);
-    crateStacks = moveMultipleCrates(crateStacks, from - 1, to - 1, amount);
+    crateStacks = moveMultipleCrates(crateStacks, from, to, amount);
   }
 
   return buildMessageFromCrateStacks(crateStacks);
