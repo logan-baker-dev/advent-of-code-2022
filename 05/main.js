@@ -22,12 +22,9 @@ const buildCrateStacks = (crates) => {
 }
 
 const parseInstruction = (instruction) => {
-  instruction = instruction
-    .replace('move ', '')
-    .replace('from ', '')
-    .replace('to ', '');
+  instruction = instruction.replaceAll(/[a-z ]/g, '');
 
-  return instruction.split(' ')
+  return instruction.split('')
     .map(number => +number);
 }
 
