@@ -9,7 +9,8 @@ const DAY = {
   one: '01',
   two: '02',
   three: '03',
-  four: '04'
+  four: '04',
+  five: '05'
 }
 
 export const loadData = (day) => {
