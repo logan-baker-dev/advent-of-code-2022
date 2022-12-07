@@ -9,14 +9,14 @@ const getProcessedCount = (day, limit) => {
 
   let left = 0;
   for (let right = limit; right < dataStream.length; ++right) {
-    let currentStream = dataStream.slice(left, right + 1);
+    let currentStream = dataStream.slice(left, right);
 
     while (!isUniqueStream(currentStream)) {
       ++left;
-      currentStream = dataStream.slice(left, right + 1);
+      currentStream = dataStream.slice(left, right);
     }
 
-    if (currentStream.length === limit) return right + 1;
+    if (currentStream.length === limit) return right;
   }
 
   return 0;
