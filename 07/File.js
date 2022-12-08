@@ -18,7 +18,7 @@ export class Directory extends File {
     this.subFiles = subFiles;
   }
 
-  addSubDirectory(file) {
+  addSubFile(file) {
     this.subFiles.set(file.name, file);
 
     this.size += file.size;

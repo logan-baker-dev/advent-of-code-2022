@@ -21,10 +21,10 @@ const buildFileSystem = (commands) => {
       }
     }
     else if (token[0] === 'dir') {
-      cwd.addSubDirectory(new Directory(token[1], cwd));
+      cwd.addSubFile(new Directory(token[1], cwd));
     }
     else {
-      cwd.addSubDirectory(new File(token[1], cwd, +token[0]))
+      cwd.addSubFile(new File(token[1], cwd, +token[0]))
     }
   }
 
