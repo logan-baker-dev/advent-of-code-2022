@@ -8,26 +8,18 @@ export default class File {
     this.parent = parent;
     this.size = size;
   }
-
-  static generateUniqueId(file) {
-    if (!file.parent) return `null:0:${file.name}:${file.size}`;
-
-    return `${file.parent.name}:${file.parent.size}:${file.name}:${file.size}`;
-  }
-
-  static printContents(file) { }
 }
 
 export class Directory extends File {
-  children = new Map();
+  subFiles = new Map();
 
-  constructor(name, parent = null, size = 0, children = new Map()) {
+  constructor(name, parent = null, size = 0, subFiles = new Map()) {
     super(name, parent, size);
-    this.children = children;
+    this.subFiles = subFiles;
   }
 
-  addChild(file) {
-    this.children.set(file.name, file);
+  addSubDirectory(file) {
+    this.subFiles.set(file.name, file);
 
     this.size += file.size;
 
@@ -39,29 +31,13 @@ export class Directory extends File {
     }
   }
 
-  findDirectory(directoryName) {
-    const stack = [this];
-    const visited = new Set();
-
-    while (stack.length > 0) {
-      const cwd = stack.pop();
-
-      const id = File.generateUniqueId(cwd);
-
-      if (visited.has(id)) continue;
-      if (cwd.name === directoryName && cwd.parent === this) return cwd;
-
-      visited.add(id);
-
-      for (const child of this.children.values()) {
-        const childId = File.generateUniqueId(child);
-
-        if (child instanceof Directory && !visited.has(childId)) {
-          stack.push(child);
-        }
+  findSubDirectory(directoryName) {
+    for (const [fileName, file] of this.subFiles) {
+      if (directoryName === fileName && file instanceof Directory) {
+        return file;
       }
     }
 
-    return null;
+    return this;
   }
 }

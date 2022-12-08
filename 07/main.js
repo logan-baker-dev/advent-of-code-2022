@@ -1,32 +1,30 @@
 import DAYS, { loadData } from '../helper.js';
 import File, { Directory } from './File.js';
 
-const buildTree = (commands) => {
+const buildFileSystem = (commands) => {
   const root = new Directory('/');
 
   let cwd = root;
-  for (const command of commands) {
-    const [type, action, name] = command.split(' ');
 
-    if (type === '$') {
-      if (action === 'cd' && name === '/') {
+  for (const command of commands) {
+    const token = command.split(' ');
+
+    if (token[0] === '$') {
+      if (token[1] === 'cd' && token[2] === '/') {
         cwd = root;
       }
-      else if (action === 'cd' && name === '..') {
+      else if (token[1] === 'cd' && token[2] === '..') {
         cwd = cwd.parent;
       }
-      else if (action === 'cd') {
-        cwd = cwd.findDirectory(name);
-      }
-      else {
-        // TO-DO: Implement printing method.
+      else if (token[1] === 'cd') {
+        cwd = cwd.findSubDirectory(token[2]);
       }
     }
-    else if (type === 'dir') {
-      cwd.addChild(new Directory(action, cwd)); // action is the file's name in this context.
+    else if (token[0] === 'dir') {
+      cwd.addSubDirectory(new Directory(token[1], cwd));
     }
     else {
-      cwd.addChild(new File(action, cwd, +type)) // action is the file name and type is the file size in this context.
+      cwd.addSubDirectory(new File(token[1], cwd, +token[0]))
     }
   }
 
@@ -36,30 +34,21 @@ const buildTree = (commands) => {
 const getSumOfDirectorySizes = (day, limit) => {
   const commands = loadData(day);
 
-  const root = buildTree(commands);
+  const root = buildFileSystem(commands);
 
   let stack = [root];
-  let visited = new Set();
   let sum = 0;
 
   while (stack.length > 0) {
-    const dir = stack.pop();
+    const directory = stack.pop();
 
-    const id = File.generateUniqueId(dir);
-
-    if (visited.has(id)) continue;
-
-    visited.add(id);
-
-    if (dir.size <= limit) {
-      sum += dir.size;
+    if (directory.size <= limit) {
+      sum += directory.size;
     }
 
-    for (const child of dir.children.values()) {
-      const childId = File.generateUniqueId(child);
-
-      if (child instanceof Directory && !visited.has(childId)) {
-        stack.push(child);
+    for (const subFile of directory.subFiles.values()) {
+      if (subFile instanceof Directory) {
+        stack.push(subFile);
       }
     }
   }
@@ -69,33 +58,23 @@ const getSumOfDirectorySizes = (day, limit) => {
 
 const getSmallestDirectoryToFreeSpace = (day, totalDiskSpace, requiredDiskSpace) => {
   const commands = loadData(day);
-
-  const root = buildTree(commands);
+  const root = buildFileSystem(commands);
 
   const freeDiskSpace = totalDiskSpace - root.size;
 
   let stack = [root];
-  let visited = new Set();
-  let minSpaceToRemove = Number.MAX_SAFE_INTEGER;
+  let minSpaceToRemove = root.size;
 
   while (stack.length > 0) {
-    const dir = stack.pop();
+    const directory = stack.pop();
 
-    const id = File.generateUniqueId(dir);
-
-    if (visited.has(id)) continue;
-
-    visited.add(id);
-
-    if ((freeDiskSpace + dir.size) >= requiredDiskSpace) {
-      minSpaceToRemove = Math.min(minSpaceToRemove, dir.size);
+    if ((freeDiskSpace + directory.size) >= requiredDiskSpace) {
+      minSpaceToRemove = Math.min(minSpaceToRemove, directory.size);
     }
 
-    for (const child of dir.children.values()) {
-      const childId = File.generateUniqueId(child);
-
-      if (child instanceof Directory && !visited.has(childId)) {
-        stack.push(child);
+    for (const subFile of directory.subFiles.values()) {
+      if (subFile instanceof Directory) {
+        stack.push(subFile);
       }
     }
   }
