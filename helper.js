@@ -18,7 +18,7 @@ const DAY = {
 
 export const loadData = (day) => {
   return readFileSync(`${__dirname}/${day}/input.txt`, 'utf-8')
-    .split('\r\n');
+    .split('\n');
 }
 
 export const loadRawData = (day) => {

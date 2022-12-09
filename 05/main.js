@@ -79,8 +79,8 @@ const getTopCrates = (day) => {
   const procedures = loadRawData(day);
 
   const [crateData, instructions] = procedures
-    .split('\r\n\r\n')
-    .map(str => str.split('\r\n'));
+    .split('\n\n')
+    .map(str => str.split('\n'));
 
   let crateStacks = buildCrateStacks(crateData);
 
@@ -96,8 +96,8 @@ const getTopCreatesWithNewCrane = (day) => {
   const procedures = loadRawData(day);
 
   const [crateData, instructions] = procedures
-    .split('\r\n\r\n')
-    .map(str => str.split('\r\n'));
+    .split('\n\n')
+    .map(str => str.split('\n'));
 
 
   let crateStacks = buildCrateStacks(crateData);
