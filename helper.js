@@ -13,7 +13,8 @@ const DAY = {
   five: '05',
   six: '06',
   seven: '07',
-  eight: '08'
+  eight: '08',
+  nine: '09'
 }
 
 export const loadData = (day) => {
