@@ -7,11 +7,11 @@ export default class Position {
     this.y = y;
   }
 
-  static getDistance(head, tail) {
+  static shouldMove(head, tail) {
     const dX = Math.abs(head.x - tail.x);
     const dY = Math.abs(head.y - tail.y);
 
-    return Math.max(dX, dY);
+    return Math.max(dX, dY) > 1;
   }
 
   moveIn(direction) {

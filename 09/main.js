@@ -26,11 +26,9 @@ const partOne = (day) => {
     for (let i = 0; i < moves; ++i) {
       headPos.moveIn(direction);
 
-      const shouldMove = Position.getDistance(headPos, tailPos) > 1;
+      if (!Position.shouldMove(headPos, tailPos)) continue;
 
-      if (shouldMove) {
-        tailPos.moveTowards(headPos);
-      }
+      tailPos.moveTowards(headPos);
 
       if (tailPositionHistory.has(tailPos.serialize())) continue;
 
@@ -64,9 +62,7 @@ const partTwo = (day, size = 2) => {
         const headPos = positions[i - 1];
         const currentPos = positions[i];
 
-        const shouldMove = Position.getDistance(headPos, currentPos) > 1;
-
-        if (!shouldMove) continue;
+        if (!Position.shouldMove(headPos, currentPos)) continue;
 
         currentPos.moveTowards(headPos);
       }
